@@ -1,0 +1,34 @@
+#include "UnderSpike.h"
+
+// 基本は三角形描画の関数の引数をもとにしている xy1は左辺　xy2は右辺　xy3は上辺の位置を入れるかつ基本は右に増やすので左端の座標とする
+// 最後の変数のみスクリーンのｘを入れる
+UnderSpike::UnderSpike(unsigned int color, int fillFlag, int Sx)
+{
+	int x1 = 0;						// 0地点
+	int y1 = WIN_SIZE_Y;			// 
+	int x2 = WIN_SIZE_X / 12;		// 
+	int y2 = WIN_SIZE_Y;			// 
+	int x3 = x2 / 2;				// 
+	int y3 = WIN_SIZE_Y / 15 * 14;	//  
+	spikeinfo = { x1, y1, x2, y2, x3, y3, color, fillFlag, Sx };
+
+	m_offset = x2;
+	m_triangleX = 0;
+}
+
+void UnderSpike::DrawSpike()
+{
+	do
+	{
+		m_triangleX = spikeinfo.x2; // 長さの合計値の加算
+
+		DrawTriangle(spikeinfo.x1, spikeinfo.y1, spikeinfo.x2, spikeinfo.y2, spikeinfo.x3, spikeinfo.y3, spikeinfo.color, spikeinfo.fillFlag); // 描画処理
+
+		spikeinfo.x1 = spikeinfo.x2; // 次の左辺のｘの更新
+		spikeinfo.x2 = spikeinfo.x2 + m_offset; // 次の右辺のｘの更新
+		spikeinfo.x3 += m_offset; // 次の上辺のｘの更新
+	} while (m_triangleX < spikeinfo.Sx);
+	spikeinfo.x1 -= m_triangleX; // 最初の値に戻す
+	spikeinfo.x2 -= m_triangleX; // 最初の値に戻す
+	spikeinfo.x3 -= m_triangleX; // 最初の値に戻す
+}
