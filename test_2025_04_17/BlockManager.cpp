@@ -2,7 +2,7 @@
 
 BlockManager::BlockManager()
 {
-	createTimer = 0; // 生成タイマー
+	m_createTimer = 0; // 生成タイマー
 }
 
 BlockManager::~BlockManager()
@@ -24,13 +24,20 @@ void BlockManager::AddBlocks(Block* newBlock)
 void BlockManager::UpDateBlocks()
 {
 	// 生成処理
-	createTimer++; // フレームごとに加算
+	m_createTimer++; // フレームごとに加算
 
-	if (createTimer >= createInterval) // 120フレームごとに生成
+	if (m_createTimer >= m_createInterval) // 120フレームごとに生成
 	{
-		// ここから～～～　2025_05_15 ～～～
+		int leftOrRight = GetRand(1); // 0～1の値をランダムで決める
+		
+		if (leftOrRight == LEFT)
+		{
 
+		}
+		else if (leftOrRight == RIGHT)
+		{
 
+		}
 	}
 	
 
@@ -59,4 +66,16 @@ void BlockManager::UpDateBlocks()
 		}
 
 	}
+}
+
+// ここから～～～　2025_05_15 ～～～
+
+void BlockManager::UpDateBlockLeft()
+{
+	m_verticalRange = GetRand();
+}
+
+void BlockManager::UpDateBlockRight()
+{
+
 }
