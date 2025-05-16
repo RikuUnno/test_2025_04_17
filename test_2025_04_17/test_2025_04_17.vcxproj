@@ -142,6 +142,7 @@
     <ClCompile Include="Block.cpp" />
     <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="FirstBlock.cpp" />
+    <ClCompile Include="LateralBlock.cpp" />
     <ClCompile Include="test_2025_04_17.cpp" />
     <ClCompile Include="UnderSpike.cpp" />
   </ItemGroup>
@@ -157,6 +158,7 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="FirstBlock.h" />
     <ClInclude Include="GameInfo.h" />
+    <ClInclude Include="LateralBlock.h" />
     <ClInclude Include="UnderSpike.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

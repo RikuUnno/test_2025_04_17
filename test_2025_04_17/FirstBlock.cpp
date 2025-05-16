@@ -9,9 +9,7 @@ FirstBlock::FirstBlock(int x1, int y1, int x2, int y2, unsigned int color, int f
 }
 
 FirstBlock::~FirstBlock()
-{
-
-}
+{}
 
 // 最初のブロックの降下用のアップデート関数
 void FirstBlock::UpdateBlock()

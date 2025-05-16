@@ -3,7 +3,7 @@
 	// コンストラクタ
 Block::Block(int x1, int y1, int x2, int y2, unsigned int color, int fillFlag)
 {
-	blockInfo = { (float)x1, (float)y1,(float)x2, (float)y2, color, fillFlag };
+	blockInfo = { (double)x1, (double)y1,(double)x2, (double)y2, color, fillFlag };
 
 	m_downSpeed = 0.7f; // どのくらいになるかわからないので一応2
 	m_lateralSpeed = 0.7f; // どのくらいになるかわからないので一応2
@@ -26,12 +26,13 @@ void Block::MoveBlockDown()
 void Block::MoveBlockLateral()
 {
 	// 最初のブロックも動いてしまうのでここには書かない
+	// memo FirstBlockClassに実装を書かないといけなくなるのでとりあえず仮想関数（別の動きをするブロックを作るときは変えたほうがいいかも）
 }
 
 // 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
 void Block::DrawBlock()
 {
-	DrawBox(blockInfo.x1, blockInfo.y1, blockInfo.x2, blockInfo.y2, blockInfo.color, blockInfo.fillFlag);
+	DrawBox((int)blockInfo.x1, (int)blockInfo.y1, (int)blockInfo.x2, (int)blockInfo.y2, blockInfo.color, blockInfo.fillFlag);
 }
 
 // 画面外かの判定
