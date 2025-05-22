@@ -2,8 +2,8 @@
 
 // 引数はDrawBox関数を参照
 // 引数の値は最初にブロックをおきたい位置で
-FirstBlock::FirstBlock(BlockInfo block)
-		: Block(block)
+FirstBlock::FirstBlock(BlockInfo blockArgument)
+		: Block(blockArgument)
 {
 	DrawBlock(); // 描画処理
 }

@@ -1,9 +1,10 @@
 #include "Block.h"
 
 	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-Block::Block(BlockInfo block)
+Block::Block(BlockInfo blockArgument)
+	: BoxCollider({blockArgument.x1, blockArgument.y1, blockArgument.x2, blockArgument.y2 })
 {
-	blockInfo = block;
+	blockInfo = blockArgument;
 
 	m_downSpeed = 0.7f; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž2
 	m_lateralSpeed = 0.7f; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž2
@@ -38,8 +39,8 @@ void Block::DrawBlock()
 // ‰æ–ÊŠO‚©‚Ì”»’è
 bool Block::IsOffScreen() const
 {
-	// ã•Ó‚ª‰æ–Ê‰º‚æ‚è‰º‚Ìê‡@‰E•Ó‚ª‰æ–Ê¶[‚T‚OÀ•W‚æ‚è­‚È‚¢‚Æ‚«@¶•Ó‚ª‰æ–Ê‰E{‚T‚OÀ•W‚æ‚è‘½‚¢‚Æ‚«‚ÉÁ‚¦‚é
-	// ¶‰E{‚T‚O‚É‚µ‚Ä‚¢‚é‚Ì‚Í¶¬‚µ‚Ä‚·‚®Á‚¦‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ßi¡Œã‘‚â‚·‚©‚àj@
+	// ã•Ó‚ª‰æ–Ê‰º‚æ‚è‰º‚Ìê‡@‰E•Ó‚ª‰æ–Ê¶[‚T‚OÀ•W‚æ‚è­‚È‚¢‚Æ‚«@¶•Ó‚ª‰æ–Ê‰E{‚Q‚O‚OÀ•W‚æ‚è‘½‚¢‚Æ‚«‚ÉÁ‚¦‚é
+	// ¶‰E{‚Q‚O‚O‚É‚µ‚Ä‚¢‚é‚Ì‚Í¶¬‚µ‚Ä‚·‚®Á‚¦‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ßi¡Œã‘‚â‚·‚©‚àj@
 	return blockInfo.y1 > WIN_SIZE_Y || blockInfo.x2 < -200 || blockInfo.x1 > WIN_SIZE_X + 200;
 }
 

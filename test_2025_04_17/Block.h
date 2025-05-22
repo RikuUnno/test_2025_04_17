@@ -1,8 +1,10 @@
 #pragma once
 #include "GameInfo.h"
 
+#include "BoxCollider.h"
+
 // ブロック関係の親クラス
-class Block
+class Block : public BoxCollider
 {
 protected:
 	BlockInfo blockInfo;
@@ -11,7 +13,7 @@ protected:
 
 public:
 	// コンストラクタ
-	Block(BlockInfo block);
+	Block(BlockInfo blockArgument);
 
 	//デストラクタ
 	virtual ~Block();

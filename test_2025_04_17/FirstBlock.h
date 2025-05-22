@@ -9,7 +9,7 @@ class FirstBlock : public Block
 public:
 	// 引数はDrawBox関数を参照
 	// 引数の値は最初にブロックをおきたい位置で
-	FirstBlock(BlockInfo block);
+	FirstBlock(BlockInfo blockArgument);
 
 	virtual ~FirstBlock();
 	

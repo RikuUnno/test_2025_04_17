@@ -26,7 +26,11 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	int Sx, Sy, Sc; // 現在のスクリーンのx,y,colorを入れる変数
 	const unsigned int TriangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
 
-	GetScreenState(&Sx, &Sy, &Sc);
+	GetScreenState(&Sx, &Sy, &Sc);// 現在のスクリーンのx,y,colorを取得
+
+	// ～～～～～～～～　
+	// ここに画像読み込みをforで回して行う
+	// ～～～～～～～～
 
 	BlockManager bm;
 

@@ -25,3 +25,15 @@ struct BlockInfo
 	unsigned int color; // コンストラクタの引数の値を入れる
 	int fillFlag; // コンストラクタの引数の値を入れる
 };
+
+struct PlayerInfo
+{
+	double x, y; // ロードした画像を描画する矩形の左上頂点の座標
+	char* GraphName; // 画像ハンドラー
+	int TransFlag; // 画像の透明度を有効にするかどうか
+};
+
+struct ColliderInfo
+{
+	double x1, y1, x2, y2;
+};

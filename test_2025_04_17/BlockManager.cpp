@@ -82,7 +82,7 @@ void BlockManager::UpDateBlockLateral(int leftOrRight)
 {
 	m_verticalRange = GetRand(250) + 150; // 縦の位置をランダムで設定
 
-	m_blockColor = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 色をランダムで設定
+	m_blockColor = GetColor(GetRand(255), GetRand(255), GetRand(255)); // 色をランダムで設定
 
 	// BlockInfo lateralBlock = {-100, m_verticalRange , 0, m_verticalRange + 50, m_blockColor, FALSE};
 

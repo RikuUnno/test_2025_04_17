@@ -1,8 +1,8 @@
 #include "LateralBlock.h"
 
 	// コンストラクタ
-LateralBlock::LateralBlock(BlockInfo block, int directionOfMovement)
-	: Block(block)
+LateralBlock::LateralBlock(BlockInfo blockArgument, int directionOfMovement)
+	: Block(blockArgument)
 {
 	m_directionOfMove = directionOfMovement;
 }
