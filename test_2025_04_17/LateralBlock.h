@@ -10,7 +10,7 @@ private:
 
 public:
 	// コンストラクタ
-	LateralBlock(int x1, int y1, int x2, int y2, unsigned int color, int fillFlag, int directionOfMovement);
+	LateralBlock(BlockInfo block, int directionOfMovement);
 
 	// デストラクタ
 	virtual ~LateralBlock();

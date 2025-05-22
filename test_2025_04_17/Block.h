@@ -11,7 +11,7 @@ protected:
 
 public:
 	// コンストラクタ
-	Block(int x1, int y1, int x2, int y2, unsigned int color, int fillFlag);
+	Block(BlockInfo block);
 
 	//デストラクタ
 	virtual ~Block();

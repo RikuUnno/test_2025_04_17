@@ -1,8 +1,12 @@
 #include "BlockManager.h"
 
+using namespace std;
+
 BlockManager::BlockManager()
 {
 	m_createTimer = 0; // 生成タイマー
+	m_verticalRange = 0; // 生成される縦の範囲
+	m_blockColor = 0; // 生成するブロックの色を格納
 }
 
 BlockManager::~BlockManager()
@@ -26,18 +30,24 @@ void BlockManager::UpDateBlocks()
 	// 生成処理
 	m_createTimer++; // フレームごとに加算
 
+	string timerStr = to_string(m_createTimer);
+
+	DrawString(0, 0, timerStr.c_str(), GetColor(255, 255, 255));
+
 	if (m_createTimer >= m_createInterval) // 120フレームごとに生成
 	{
 		int leftOrRight = GetRand(1); // 0～1の値をランダムで決める
 		
 		if (leftOrRight == LEFT)
 		{
-
+			UpDateBlockLateral(LEFT);
 		}
 		else if (leftOrRight == RIGHT)
 		{
-
+			UpDateBlockLateral(RIGHT);
 		}
+
+		m_createTimer = 0;
 	}
 	
 
@@ -68,14 +78,24 @@ void BlockManager::UpDateBlocks()
 	}
 }
 
-// ここから～～～　2025_05_15 ～～～
-
-void BlockManager::UpDateBlockLeft()
+void BlockManager::UpDateBlockLateral(int leftOrRight)
 {
-	m_verticalRange = GetRand();
-}
+	m_verticalRange = GetRand(250) + 150; // 縦の位置をランダムで設定
 
-void BlockManager::UpDateBlockRight()
-{
+	m_blockColor = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 色をランダムで設定
 
+	// BlockInfo lateralBlock = {-100, m_verticalRange , 0, m_verticalRange + 50, m_blockColor, FALSE};
+
+	if (leftOrRight == LEFT)
+	{
+		BlockInfo lateralBlock = { WIN_SIZE_X, m_verticalRange, WIN_SIZE_X + 125, m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
+
+		AddBlocks(new LateralBlock(lateralBlock, LEFT)); // ブロックの生成
+	}
+	else if (leftOrRight == RIGHT)
+	{
+		BlockInfo lateralBlock = { -125, m_verticalRange, 0, m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
+
+		AddBlocks(new LateralBlock(lateralBlock, RIGHT)); // ブロックの生成
+	}
 }

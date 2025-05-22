@@ -20,20 +20,22 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	{
 		return -1; // エラーが起きたら直ちに終了
 	}
+
+	SRand((unsigned int)time(NULL));
 	
 	int Sx, Sy, Sc; // 現在のスクリーンのx,y,colorを入れる変数
-	const unsigned int TriangleCr = GetColor(255, 255, 0); // 底辺のとげの色をいれる変数（黄色）
+	const unsigned int TriangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
 
 	GetScreenState(&Sx, &Sy, &Sc);
 
 	BlockManager bm;
 
 	UnderSpike spike(TriangleCr, TRUE, Sx);
-	
-	bm.AddBlocks(new FirstBlock(WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, TriangleCr, TRUE));
 
+	BlockInfo block; // 生成用（デバック）
+	
 	// デバック用
-	bm.AddBlocks(new LateralBlock(WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, TriangleCr, FALSE, RIGHT));
+	bm.AddBlocks(new FirstBlock(block = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, TriangleCr, TRUE }));
 
 	// 描画先画面を裏画面にセット
 	SetDrawScreen(DX_SCREEN_BACK);

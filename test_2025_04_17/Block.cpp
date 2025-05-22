@@ -1,9 +1,9 @@
 #include "Block.h"
 
 	// ƒRƒ“ƒXƒgƒ‰ƒNƒ^
-Block::Block(int x1, int y1, int x2, int y2, unsigned int color, int fillFlag)
+Block::Block(BlockInfo block)
 {
-	blockInfo = { (double)x1, (double)y1,(double)x2, (double)y2, color, fillFlag };
+	blockInfo = block;
 
 	m_downSpeed = 0.7f; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž2
 	m_lateralSpeed = 0.7f; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž2
@@ -40,6 +40,6 @@ bool Block::IsOffScreen() const
 {
 	// ã•Ó‚ª‰æ–Ê‰º‚æ‚è‰º‚Ìê‡@‰E•Ó‚ª‰æ–Ê¶[‚T‚OÀ•W‚æ‚è­‚È‚¢‚Æ‚«@¶•Ó‚ª‰æ–Ê‰E{‚T‚OÀ•W‚æ‚è‘½‚¢‚Æ‚«‚ÉÁ‚¦‚é
 	// ¶‰E{‚T‚O‚É‚µ‚Ä‚¢‚é‚Ì‚Í¶¬‚µ‚Ä‚·‚®Á‚¦‚È‚¢‚æ‚¤‚É‚·‚é‚½‚ßi¡Œã‘‚â‚·‚©‚àj@
-	return blockInfo.y1 > WIN_SIZE_Y || blockInfo.x2 < -50 || blockInfo.x1 > WIN_SIZE_X + 50;
+	return blockInfo.y1 > WIN_SIZE_Y || blockInfo.x2 < -200 || blockInfo.x1 > WIN_SIZE_X + 200;
 }
 

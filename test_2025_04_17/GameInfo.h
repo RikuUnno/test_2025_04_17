@@ -1,6 +1,8 @@
 #pragma once
 #include "DxLib.h"
 #include <vector>
+#include <string>
+#include <time.h>
 
 #define LEFT 0
 #define RIGHT 1
