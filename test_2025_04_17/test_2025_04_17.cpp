@@ -63,8 +63,6 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 		bm.UpDateBlocks();
 
-
-
 		ScreenFlip();
 	}
 

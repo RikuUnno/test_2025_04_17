@@ -10,6 +10,7 @@ protected:
 	BlockInfo blockInfo;
 	double m_downSpeed; // 落ちる速さ
 	double m_lateralSpeed; // 横移動の速さ
+	int m_fillFlag; // ブロックの塗りつぶし
 
 public:
 	// コンストラクタ

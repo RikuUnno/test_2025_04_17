@@ -28,7 +28,14 @@ void LateralBlock::MoveBlockLateral()
 
 void LateralBlock::UpdateBlock()
 {
-	MoveBlockLateral(); // ¶ˆÚ“®
-
+	// if("‚±‚±‚É“–‚½‚Á‚½”»’è‚ğ“ü‚ê‚é")
+	// {
+	MoveBlockLateral(); // ‰¡ˆÚ“®
+	// }
+	// else
+	// {
+	// MoveBlockDown(); // ‰ºˆÚ“®
+	// m_fillFlag = true; // ƒuƒƒbƒN‚Ì“h‚è‚Â‚Ô‚µ
+	// }
 	DrawBlock(); // •`‰æ
 }

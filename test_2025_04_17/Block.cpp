@@ -8,6 +8,8 @@ Block::Block(BlockInfo blockArgument)
 
 	m_downSpeed = 0.7f; // どのくらいになるかわからないので一応2
 	m_lateralSpeed = 0.7f; // どのくらいになるかわからないので一応2
+
+	m_fillFlag = blockInfo.fillFlag;
 }
 
 //デストラクタ
@@ -33,7 +35,7 @@ void Block::MoveBlockLateral()
 // 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
 void Block::DrawBlock()
 {
-	DrawBox((int)blockInfo.x1, (int)blockInfo.y1, (int)blockInfo.x2, (int)blockInfo.y2, blockInfo.color, blockInfo.fillFlag);
+	DrawBox((int)blockInfo.x1, (int)blockInfo.y1, (int)blockInfo.x2, (int)blockInfo.y2, blockInfo.color, m_fillFlag);
 }
 
 // 画面外かの判定

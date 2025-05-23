@@ -5,6 +5,7 @@
 class BoxCollider
 {
 protected:
+	bool m_onCollisionEnter; // 当たり判定
 
 public:
 	// コンストラクタ
@@ -14,5 +15,5 @@ public:
 	virtual ~BoxCollider();
 
 	//当たり判定
-	void OnCollision();
+	bool OnCollision();
 };
