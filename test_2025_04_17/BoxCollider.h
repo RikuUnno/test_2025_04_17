@@ -8,7 +8,7 @@ protected:
 
 public:
 	// コンストラクタ
-	BoxCollider(ColliderInfo);
+	BoxCollider(ColliderInfo collider);
 
 	// デストラクタ
 	virtual ~BoxCollider();

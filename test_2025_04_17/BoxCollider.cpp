@@ -1,7 +1,7 @@
 #include "BoxCollider.h"
 
 // コンストラクタ
-BoxCollider::BoxCollider(ColliderInfo)
+BoxCollider::BoxCollider(ColliderInfo collider)
 {
 
 }

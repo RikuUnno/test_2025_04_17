@@ -1,5 +1,7 @@
 #include "BlockManager.h"
 
+#include <string>
+
 using namespace std;
 
 BlockManager::BlockManager()
@@ -88,13 +90,13 @@ void BlockManager::UpDateBlockLateral(int leftOrRight)
 
 	if (leftOrRight == LEFT)
 	{
-		BlockInfo lateralBlock = { WIN_SIZE_X, m_verticalRange, WIN_SIZE_X + 125, m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
+		BlockInfo lateralBlock = { WIN_SIZE_X, (double)m_verticalRange, WIN_SIZE_X + 125, (double)m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 
 		AddBlocks(new LateralBlock(lateralBlock, LEFT)); // ブロックの生成
 	}
 	else if (leftOrRight == RIGHT)
 	{
-		BlockInfo lateralBlock = { -125, m_verticalRange, 0, m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
+		BlockInfo lateralBlock = { -125, (double)m_verticalRange, 0, (double)m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 
 		AddBlocks(new LateralBlock(lateralBlock, RIGHT)); // ブロックの生成
 	}

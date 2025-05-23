@@ -1,8 +1,7 @@
 #pragma once
 #include "DxLib.h"
+
 #include <vector>
-#include <string>
-#include <time.h>
 
 #define LEFT 0
 #define RIGHT 1
@@ -29,7 +28,7 @@ struct BlockInfo
 struct PlayerInfo
 {
 	double x, y; // ロードした画像を描画する矩形の左上頂点の座標
-	char* GraphName; // 画像ハンドラー
+	int GraphName; // 画像ハンドラー
 	int TransFlag; // 画像の透明度を有効にするかどうか
 };
 

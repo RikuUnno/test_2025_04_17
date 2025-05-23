@@ -5,6 +5,10 @@
 #include "BlockManager.h"
 #include "FirstBlock.h"
 #include "LateralBlock.h"
+#include "Player.h"
+#include "BoxCollider.h"
+
+#include <time.h>
 
 using namespace std;
 
@@ -30,15 +34,17 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	// ～～～～～～～～　
 	// ここに画像読み込みをforで回して行う
+	int playerGraph = LoadGraph("idolFront.png");
 	// ～～～～～～～～
 
 	BlockManager bm;
 
 	UnderSpike spike(TriangleCr, TRUE, Sx);
 
-	BlockInfo block; // 生成用（デバック）
+	BlockInfo block; // 生成用
+
+	Player player(PlayerInfo({WIN_SIZE_X / 2, WIN_SIZE_Y / 2, playerGraph, TRUE}));
 	
-	// デバック用
 	bm.AddBlocks(new FirstBlock(block = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, TriangleCr, TRUE }));
 
 	// 描画先画面を裏画面にセット
@@ -53,7 +59,11 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		// 三角形を描画
 		spike.DrawSpike();
 
+		player.UpDatePlayer();
+
 		bm.UpDateBlocks();
+
+
 
 		ScreenFlip();
 	}
