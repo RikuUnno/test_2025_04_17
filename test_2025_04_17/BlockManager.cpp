@@ -32,9 +32,12 @@ void BlockManager::UpDateBlocks()
 	// 生成処理
 	m_createTimer++; // フレームごとに加算
 
-	string timerStr = to_string(m_createTimer);
+#ifdef _DEBUG
 
+	string timerStr = to_string(m_createTimer);
 	DrawString(0, 0, timerStr.c_str(), GetColor(255, 255, 255));
+
+#endif // _DEBUG
 
 	if (m_createTimer >= m_createInterval) // 120フレームごとに生成
 	{

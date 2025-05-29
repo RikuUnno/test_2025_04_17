@@ -15,5 +15,5 @@ BoxCollider::~BoxCollider()
 //“–‚½‚è”»’è
 bool BoxCollider::OnCollision()
 {
-	
+	return 0; // (‰¼)
 }

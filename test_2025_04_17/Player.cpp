@@ -3,7 +3,7 @@
 
 // コンストラクタ
 Player::Player(PlayerInfo playerArgument)
-	: BoxCollider([&]() // ラムダ式
+	: BoxCollider([&]() // ラムダ式 　BoxColliderの引数に入れるための値の計算
 		{
 			int sizeXBuf = 0, sizeYBuf = 0; // 画像のサイズを保持する変数（一回きり）
 			GetGraphSize(playerArgument.GraphName, &sizeXBuf, &sizeYBuf); // 画像のサイズを取得して格納
@@ -34,21 +34,22 @@ Player::~Player()
 void Player::UpDatePlayer()
 {
 
+#ifdef _DEBUG
 	std::string timerStr = std::to_string(playerInfo.y);
-
 	DrawString(0, 15, timerStr.c_str(), GetColor(255, 255, 255));
+#endif // _DEBUG
 
 
 	if (!CheckHitKey(KEY_INPUT_SPACE))
 	{
-		m_isPushToSpace = false;
+		m_isPushToSpace = false; // 一度押したら離すまで再入力されない
 	}
 
 	// スペースを押したらジャンプ
 	if (!m_isJumping && !m_isFalling && CheckHitKey(KEY_INPUT_SPACE) && !m_isPushToSpace)
 	{
-		m_isJumping = true;
-		m_isPushToSpace = true;
+		m_isJumping = true; // ジャンプしてる
+		m_isPushToSpace = true; // 一度押したら離すまで再入力されない
 		m_jumpStartY = playerInfo.y;
 	}
 
@@ -78,8 +79,8 @@ void Player::IsJumping()
 	playerInfo.y -= m_jumpSpeed;
 	if (playerInfo.y <= m_jumpStartY - m_jumpHeightMax || !CheckHitKey(KEY_INPUT_SPACE))
 	{
-		m_isJumping = false;
-		m_isFalling = true;
+		m_isJumping = false; // ジャンプしていない
+		m_isFalling = true; // 空中
 	}
 }
 
@@ -87,8 +88,8 @@ void Player::IsJumping()
 void Player::IsFalling()
 {
 	playerInfo.y += m_gravity;
-	if (playerInfo.y >= 300)
+	if (playerInfo.y >= 300) // ここに当たり判定系の処理を入れる（落ちる高さ）
 	{
-		m_isFalling = false;
+		m_isFalling = false; // 何かしらの上
 	}
 }
