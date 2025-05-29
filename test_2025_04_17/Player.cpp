@@ -16,11 +16,9 @@ Player::Player(PlayerInfo playerArgument)
 				playerArgument.y + sizeYBuf
 			};
 		}())
-{
+{ // ～～～ここからコンストラクタの中身～～～↓
 	playerInfo = playerArgument; // コンストラクタ引数の情報を保存
-	m_isJumping = false; // ジャンプ中か
-	m_isFalling = false; // 落下中か
-	m_isPushToSpace = false; // スペースキーが一度押されたか
+	m_flags = 0; // (0b00000000)
 	m_jumpStartY = 0.0; // ジャンプ開始時のY座標
 }
 
@@ -40,29 +38,29 @@ void Player::UpDatePlayer()
 #endif // _DEBUG
 
 
-	if (!CheckHitKey(KEY_INPUT_SPACE))
+	if (!CheckHitKey(KEY_INPUT_SPACE)) // スペースキーを押していたら
 	{
-		m_isPushToSpace = false; // 一度押したら離すまで再入力されない
+		m_flags &= ~m_ISPUSHTOSPACE; // 一度押したら離すまで再入力されない
 	}
 
 	// スペースを押したらジャンプ
-	if (!m_isJumping && !m_isFalling && CheckHitKey(KEY_INPUT_SPACE) && !m_isPushToSpace)
+	if (!(m_flags & m_ISJUMPING) && !(m_flags & m_ISFALLING) 
+		&& !(m_flags & m_ISPUSHTOSPACE) && CheckHitKey(KEY_INPUT_SPACE))
 	{
-		m_isJumping = true; // ジャンプしてる
-		m_isPushToSpace = true; // 一度押したら離すまで再入力されない
+		m_flags |= m_ISJUMPING; // ジャンプしてる
+		m_flags |= m_ISPUSHTOSPACE; // 一度押したら離すまで再入力されない
 		m_jumpStartY = playerInfo.y;
 	}
 
-	if (m_isJumping)
+	if (m_flags & m_ISJUMPING) // 飛んでいたら
 	{
-		IsJumping();
+		Jumping();
 	}
 
-	if (m_isFalling)
+	if (m_flags & m_ISFALLING) // 落ちていたら
 	{
-		IsFalling();
+		Falling();
 	}
-
 
 	DrawPlayer(); // プレイヤーの描画
 }
@@ -74,22 +72,22 @@ void Player::DrawPlayer() const
 }
 
 // ジャンプのしてる判定
-void Player::IsJumping()
+void Player::Jumping()
 {
-	playerInfo.y -= m_jumpSpeed;
-	if (playerInfo.y <= m_jumpStartY - m_jumpHeightMax || !CheckHitKey(KEY_INPUT_SPACE))
+	playerInfo.y -= m_JUMPSPEED;
+	if (playerInfo.y <= m_jumpStartY - m_HUMPHEIGHTMAX || !CheckHitKey(KEY_INPUT_SPACE))
 	{
-		m_isJumping = false; // ジャンプしていない
-		m_isFalling = true; // 空中
+		m_flags &= ~m_ISJUMPING; // ジャンプしていない
+		m_flags |= m_ISFALLING; // 空中
 	}
 }
 
 // 落ちてる判定
-void Player::IsFalling()
+void Player::Falling()
 {
-	playerInfo.y += m_gravity;
+	playerInfo.y += m_GRAVITY;
 	if (playerInfo.y >= 300) // ここに当たり判定系の処理を入れる（落ちる高さ）
 	{
-		m_isFalling = false; // 何かしらの上
+		m_flags &= ~m_ISFALLING; // 何かしらの上
 	}
 }

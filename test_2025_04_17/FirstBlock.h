@@ -13,6 +13,7 @@ public:
 
 	virtual ~FirstBlock();
 	
+private:
 	// 最初のブロックの降下用のアップデート関数
 	void UpdateBlock() override;
 

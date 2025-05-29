@@ -2,9 +2,15 @@
 
 #include "GameInfo.h"
 
+struct ColliderInfo
+{
+	double x1, y1, x2, y2;
+};
+
 class BoxCollider
 {
 protected:
+	ColliderInfo collider;
 	bool m_onCollisionEnter; // “–‚½‚è”»’è
 
 public:
@@ -16,4 +22,6 @@ public:
 
 	//“–‚½‚è”»’è
 	bool OnCollision();
+
+	ColliderInfo GetCclliderInfo();
 };

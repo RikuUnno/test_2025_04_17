@@ -27,23 +27,23 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	SRand((unsigned int)time(NULL));
 	
-	int Sx, Sy, Sc; // 現在のスクリーンのx,y,colorを入れる変数
+	int sx, sy, sc; // 現在のスクリーンのx,y,colorを入れる変数
 	const unsigned int TriangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
 
-	GetScreenState(&Sx, &Sy, &Sc);// 現在のスクリーンのx,y,colorを取得
+	GetScreenState(&sx, &sy, &sc);// 現在のスクリーンのx,y,colorを取得
 
 	// ～～～～～～～～　
 	// ここに画像読み込みをforで回して行う
 	int playerGraph = LoadGraph("idolFront.png");
 	// ～～～～～～～～
 
-	BlockManager bm;
-
-	UnderSpike spike(TriangleCr, TRUE, Sx);
+	UnderSpike spike(TriangleCr, TRUE, sx);
 
 	BlockInfo block; // 生成用
 
 	Player player(PlayerInfo({WIN_SIZE_X / 2, WIN_SIZE_Y / 2, playerGraph, TRUE}));
+
+	BlockManager bm(&player);
 	
 	bm.AddBlocks(new FirstBlock(block = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, TriangleCr, TRUE }));
 
@@ -59,9 +59,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		// 三角形を描画
 		spike.DrawSpike();
 
-		player.UpDatePlayer();
-
 		bm.UpDateBlocks();
+
+		player.UpDatePlayer();
 
 		ScreenFlip();
 	}

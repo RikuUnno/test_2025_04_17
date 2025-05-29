@@ -1,8 +1,9 @@
 #include "BoxCollider.h"
 
 // コンストラクタ
-BoxCollider::BoxCollider(ColliderInfo collider)
+BoxCollider::BoxCollider(ColliderInfo colliderArgument)
 {
+	collider = colliderArgument;
 	m_onCollisionEnter = false;
 }
 
@@ -16,4 +17,9 @@ BoxCollider::~BoxCollider()
 bool BoxCollider::OnCollision()
 {
 	return 0; // (仮)
+}
+
+ColliderInfo BoxCollider::GetCclliderInfo()
+{
+	return collider;
 }

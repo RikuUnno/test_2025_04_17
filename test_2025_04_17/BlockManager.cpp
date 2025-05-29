@@ -4,8 +4,9 @@
 
 using namespace std;
 
-BlockManager::BlockManager()
+BlockManager::BlockManager(BoxCollider* player)
 {
+	m_player = player;
 	m_createTimer = 0; // 生成タイマー
 	m_verticalRange = 0; // 生成される縦の範囲
 	m_blockColor = 0; // 生成するブロックの色を格納
@@ -19,6 +20,12 @@ BlockManager::~BlockManager()
 		delete blockList[i];
 	}
 	blockList.clear();
+
+	if (m_player != nullptr)
+	{
+		delete m_player;
+		m_player = nullptr;
+	}
 }
 
 void BlockManager::AddBlocks(Block* newBlock)
@@ -39,19 +46,9 @@ void BlockManager::UpDateBlocks()
 
 #endif // _DEBUG
 
-	if (m_createTimer >= m_createInterval) // 120フレームごとに生成
+	if (m_createTimer >= m_CREATEINTERAVL) // 120フレームごとに生成
 	{
-		int leftOrRight = GetRand(1); // 0～1の値をランダムで決める
-		
-		if (leftOrRight == LEFT)
-		{
-			UpDateBlockLateral(LEFT);
-		}
-		else if (leftOrRight == RIGHT)
-		{
-			UpDateBlockLateral(RIGHT);
-		}
-
+		UpDateBlockLateral();
 		m_createTimer = 0;
 	}
 	
@@ -80,27 +77,36 @@ void BlockManager::UpDateBlocks()
 			++it; // リストの更新
 		}
 
+		
+
 	}
 }
 
-void BlockManager::UpDateBlockLateral(int leftOrRight)
+void BlockManager::UpDateBlockLateral()
 {
+	BlockInfo lateralBlock = {0,0,0,0,0,0};
+	int vx = -1 + 2 * GetRand(1); // -1,1の値をランダムで決める
+
 	m_verticalRange = GetRand(250) + 150; // 縦の位置をランダムで設定
 
 	m_blockColor = GetColor(GetRand(255), GetRand(255), GetRand(255)); // 色をランダムで設定
 
 	// BlockInfo lateralBlock = {-100, m_verticalRange , 0, m_verticalRange + 50, m_blockColor, FALSE};
 
-	if (leftOrRight == LEFT)
+	if (vx < 0)
 	{
-		BlockInfo lateralBlock = { WIN_SIZE_X, (double)m_verticalRange, WIN_SIZE_X + 125, (double)m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
-
-		AddBlocks(new LateralBlock(lateralBlock, LEFT)); // ブロックの生成
+		lateralBlock = { WIN_SIZE_X, (double)m_verticalRange, WIN_SIZE_X + 125, (double)m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 	}
-	else if (leftOrRight == RIGHT)
+	else if (vx > 0)
 	{
-		BlockInfo lateralBlock = { -125, (double)m_verticalRange, 0, (double)m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
-
-		AddBlocks(new LateralBlock(lateralBlock, RIGHT)); // ブロックの生成
+		lateralBlock = { -125, (double)m_verticalRange, 0, (double)m_verticalRange + 50, m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 	}
+
+	AddBlocks(new LateralBlock(lateralBlock, vx)); // ブロックの生成
+
 }
+
+//void BlockManager::CheckHitCollider(Block* block)
+//{
+//	if(m_player->GetCclliderInfo().x2 >= block->GetCclliderInfo().x1 && m_player->GetCclliderInfo().y2)
+//}

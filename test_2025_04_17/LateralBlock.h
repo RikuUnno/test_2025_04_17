@@ -15,6 +15,7 @@ public:
 	// デストラクタ
 	virtual ~LateralBlock();
 
+private:
 	// 左移動
 	void MoveBlockLateral() override;
 
