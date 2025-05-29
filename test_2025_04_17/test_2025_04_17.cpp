@@ -28,7 +28,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	SRand((unsigned int)time(NULL));
 	
 	int sx, sy, sc; // 現在のスクリーンのx,y,colorを入れる変数
-	const unsigned int TriangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
+	const unsigned int triangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
 
 	GetScreenState(&sx, &sy, &sc);// 現在のスクリーンのx,y,colorを取得
 
@@ -37,7 +37,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	int playerGraph = LoadGraph("idolFront.png");
 	// ～～～～～～～～
 
-	UnderSpike spike(TriangleCr, TRUE, sx);
+	UnderSpike spike(triangleCr, TRUE, sx);
 
 	BlockInfo block; // 生成用
 
@@ -45,7 +45,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	BlockManager bm(&player);
 	
-	bm.AddBlocks(new FirstBlock(block = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, TriangleCr, TRUE }));
+	bm.AddBlocks(new FirstBlock(block = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, triangleCr, TRUE }));
 
 	// 描画先画面を裏画面にセット
 	SetDrawScreen(DX_SCREEN_BACK);
