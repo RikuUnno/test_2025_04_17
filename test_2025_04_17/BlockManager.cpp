@@ -21,11 +21,7 @@ BlockManager::~BlockManager()
 	}
 	blockList.clear();
 
-	if (m_player != nullptr)
-	{
-		delete m_player;
-		m_player = nullptr;
-	}
+	m_player = nullptr;
 }
 
 void BlockManager::AddBlocks(Block* newBlock)
