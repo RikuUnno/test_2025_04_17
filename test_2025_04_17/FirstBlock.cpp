@@ -2,8 +2,8 @@
 
 // 引数はDrawBox関数を参照
 // 引数の値は最初にブロックをおきたい位置で
-FirstBlock::FirstBlock(BlockInfo blockArgument)
-		: Block(blockArgument)
+FirstBlock::FirstBlock(ColliderInfo blockArgumentXY, BlockInfo blockArgument)
+		: Block(blockArgumentXY, blockArgument)
 {
 	DrawBlock(); // 描画処理
 }
@@ -17,6 +17,4 @@ void FirstBlock::UpdateBlock()
 	// ここに消す判定のメンバ関数を入れる
 
 	MoveBlockDown(); // 下がっていく処理
-
-	DrawBlock(); // 描画処理
 }

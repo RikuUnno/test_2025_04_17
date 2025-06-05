@@ -1,6 +1,4 @@
 #pragma once
-
-#include "GameInfo.h"
 #include "BoxCollider.h"
 
 struct PlayerInfo
@@ -14,8 +12,9 @@ class Player : public BoxCollider
 {
 private:
 	PlayerInfo playerInfo;
-	const double m_JUMPSPEED = 5.0; // 上昇速度
+	const double m_JUMPSPEED = 10.0; // 上昇速度
 	const double m_GRAVITY = 4.0; // 落下速度
+	const double m_BLOCKDOUWSPEED = 0.7; // ブロックの落下速度
 	const double m_HUMPHEIGHTMAX = 200.0; // 最大ジャンプ高さ
 	const char m_ISJUMPING = 0b00001; // ジャンプ中か
 	const char m_ISFALLING = 0b00010; // 落下中か
@@ -30,6 +29,8 @@ private:
 
 	// 落ちている判定
 	void Falling();
+
+	void OnCollision(); // 当たっているときの処理（使わなくてもいい）
 
 public:
 	// コンストラクタ

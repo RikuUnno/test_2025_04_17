@@ -39,13 +39,14 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	UnderSpike spike(triangleCr, TRUE, sx);
 
-	BlockInfo block; // 生成用
+	ColliderInfo blockXY = {0,0,0,0}; // 生成用
+	BlockInfo block = {0,0}; // 生成用
 
-	Player player(PlayerInfo({WIN_SIZE_X / 2, WIN_SIZE_Y / 2, playerGraph, TRUE}));
+	Player player(PlayerInfo({ WIN_SIZE_X / 2, WIN_SIZE_Y / 4 * -3, playerGraph, TRUE}));
 
-	BlockManager bm(&player);
+	BlockManager bm;
 	
-	bm.AddBlocks(new FirstBlock(block = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150, triangleCr, TRUE }));
+	bm.AddBlocks(new FirstBlock(blockXY = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, block = {triangleCr, TRUE}));
 
 	// 描画先画面を裏画面にセット
 	SetDrawScreen(DX_SCREEN_BACK);
@@ -56,12 +57,21 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		clsDx();
 		ClearDrawScreen();
 
-		// 三角形を描画
-		spike.DrawSpike();
+		
+		bm.UpDateBlocks(&player); // ブロックの内部処理
 
-		bm.UpDateBlocks();
+		bm.CheckHitColliderAll(&player); // 当たり判定
 
-		player.UpDatePlayer();
+		player.UpDatePlayer(); // プレイヤーの内部処理
+
+
+		// ～～～描画～～～　処理の手順と描画で入れ違うことがあったので分離
+
+		spike.DrawSpike(); // スパイクを描画
+
+		bm.DrawBlocks(); // ブロックの描画
+
+		player.DrawPlayer(); // プレイヤーの描画
 
 		ScreenFlip();
 	}

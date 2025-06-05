@@ -4,7 +4,7 @@
 BoxCollider::BoxCollider(ColliderInfo colliderArgument)
 {
 	collider = colliderArgument;
-	m_onCollisionEnter = false;
+	m_onCollision = false;
 }
 
 // デストラクタ
@@ -13,13 +13,20 @@ BoxCollider::~BoxCollider()
 
 }
 
-//当たり判定
-bool BoxCollider::OnCollision()
+// 当たり判定
+void BoxCollider::SetOnCollisionTrue()
 {
-	return 0; // (仮)
+	m_onCollision = true;
 }
 
-ColliderInfo BoxCollider::GetCclliderInfo()
+// 当たり判定
+void BoxCollider::SetOnCollisionFalse()
+{
+	m_onCollision = false;
+}
+
+// コライダーのゲッター
+ColliderInfo BoxCollider::GetColliderInfo() const
 {
 	return collider;
 }

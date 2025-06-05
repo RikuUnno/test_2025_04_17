@@ -1,13 +1,11 @@
 #pragma once
-#include "GameInfo.h"
-
 #include "BoxCollider.h"
 
 struct BlockInfo
 {
-	double x1, y1, x2, y2; // コンストラクタの引数の値を入れる
-	unsigned int color; // コンストラクタの引数の値を入れる
-	int fillFlag; // コンストラクタの引数の値を入れる
+	// double x1, y1, x2, y2; // ブロックの位置情報
+	unsigned int color; // ブロックの色
+	int fillFlag; // 埋めるかどうか
 };
 
 // ブロック関係の親クラス
@@ -21,7 +19,7 @@ protected:
 
 public:
 	// コンストラクタ
-	Block(BlockInfo blockArgument);
+	Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument);
 
 	//デストラクタ
 	virtual ~Block();
@@ -37,17 +35,16 @@ protected:
 	// 横移動のコードを書く(おそらく最初のブロックには使われないものとなる)
 	//（一フレームごとに一回呼ばれるようにするのでこんな課は一フレーム毎に行う処理を書く）
 
-	// 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
-	virtual void DrawBlock();
-
 public:
-	// ブロックをリストで管理する内容をこっちに書く
-	// ブロックの削除はこっちで管理するのかブロック本体のクラスで管理するのか考えどころ
+	// 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
+	virtual void DrawBlock() const;
+
+	// ブロックの内部処理（位置の変更等）
 	virtual void UpdateBlock() = 0;
-	// リスト等を使って最初ブロックやこれから出てくるブロックの移動関係の処理を追加する
-	// この関数を一個だけ入れると（リストの更新・ブロックの削除）をやってくれるようにする
 
 	// 画面外かの判定
 	bool IsOffScreen() const;
 
+	// ブロックの色埋め
+	void SetFillBlock();
 };

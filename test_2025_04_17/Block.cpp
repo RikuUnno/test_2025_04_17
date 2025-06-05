@@ -1,15 +1,17 @@
 #include "Block.h"
+#include "DxLib.h"
+#include "GameInfo.h"
 
 	// コンストラクタ
-Block::Block(BlockInfo blockArgument)
-	: BoxCollider({blockArgument.x1, blockArgument.y1, blockArgument.x2, blockArgument.y2 })
+Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument)
+	: BoxCollider({ blockArgumentXY})
 {
 	blockInfo = blockArgument;
 
-	m_downSpeed = 0.7f; // どのくらいになるかわからないので一応2
-	m_lateralSpeed = 0.7f; // どのくらいになるかわからないので一応2
+	m_downSpeed = 0.7; // どのくらいになるかわからないので一応0.7f
+	m_lateralSpeed = 2; // どのくらいになるかわからないので一応0.7f
 
-	m_fillFlag = blockInfo.fillFlag;
+	m_fillFlag = FALSE;
 }
 
 //デストラクタ
@@ -21,8 +23,8 @@ Block::~Block()
 // ブロックの横移動
 void Block::MoveBlockDown()
 {
-	blockInfo.y1 += m_downSpeed;
-	blockInfo.y2 += m_downSpeed;
+	collider.y1 += m_downSpeed;
+	collider.y2 += m_downSpeed;
 }
 
 // ブロックの横移動
@@ -33,9 +35,9 @@ void Block::MoveBlockLateral()
 }
 
 // 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
-void Block::DrawBlock()
+void Block::DrawBlock() const
 {
-	DrawBox((int)blockInfo.x1, (int)blockInfo.y1, (int)blockInfo.x2, (int)blockInfo.y2, blockInfo.color, m_fillFlag);
+	DrawBox((int)collider.x1, (int)collider.y1, (int)collider.x2, (int)collider.y2, blockInfo.color, blockInfo.fillFlag);
 }
 
 // 画面外かの判定
@@ -43,6 +45,11 @@ bool Block::IsOffScreen() const
 {
 	// 上辺が画面下より下の場合　右辺が画面左ー５０座標より少ないとき　左辺が画面右＋２００座標より多いときに消える
 	// 左右＋２００にしているのは生成してすぐ消えないようにするため（今後増やすかも）　
-	return blockInfo.y1 > WIN_SIZE_Y || blockInfo.x2 < -200 || blockInfo.x1 > WIN_SIZE_X + 200;
+	return collider.y1 > WIN_SIZE_Y || collider.x2 < -200 || collider.x1 > WIN_SIZE_X + 200;
 }
 
+// ブロックの色埋め
+void Block::SetFillBlock()
+{
+	blockInfo.fillFlag = TRUE;
+}

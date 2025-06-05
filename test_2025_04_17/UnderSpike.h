@@ -1,13 +1,11 @@
 #pragma once
 
-#include "GameInfo.h"
-
 struct SpikInfo
 {
-	int x1, y1, x2, y2, x3, y3; // コンストラクタの引数の値を入れる
-	unsigned int color; // コンストラクタの引数の値を入れる
-	int fillFlag; // コンストラクタの引数の値を入れる
-	int sx; // コンストラクタの引数の値を入れる
+	int x1, y1, x2, y2, x3, y3; // スパイクの位置情報
+	unsigned int color; // スパイクの色
+	int fillFlag; // 埋めるがどうか
+	int sx; // スクリーンのサイズ
 };
 
 // 底辺のとげを作るクラス　

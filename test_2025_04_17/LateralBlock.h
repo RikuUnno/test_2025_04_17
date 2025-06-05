@@ -10,13 +10,13 @@ private:
 
 public:
 	// コンストラクタ
-	LateralBlock(BlockInfo blockArgument, int directionOfMovement);
+	LateralBlock(ColliderInfo blockArgumentXY, BlockInfo blockArgument, int directionOfMovement);
 
 	// デストラクタ
 	virtual ~LateralBlock();
 
 private:
-	// 左移動
+	// 左右移動
 	void MoveBlockLateral() override;
 
 	// 描画更新

@@ -1,4 +1,5 @@
 #include "Player.h"
+#include "DxLib.h"
 #include <string>
 
 // コンストラクタ
@@ -31,13 +32,6 @@ Player::~Player()
 //プレイヤー関係の更新用
 void Player::UpDatePlayer()
 {
-
-#ifdef _DEBUG
-	std::string timerStr = std::to_string(playerInfo.y);
-	DrawString(0, 15, timerStr.c_str(), GetColor(255, 255, 255));
-#endif // _DEBUG
-
-
 	if (!CheckHitKey(KEY_INPUT_SPACE)) // スペースキーを押していたら
 	{
 		m_flags &= ~m_ISPUSHTOSPACE; // 一度押したら離すまで再入力されない
@@ -45,11 +39,12 @@ void Player::UpDatePlayer()
 
 	// スペースを押したらジャンプ
 	if (!(m_flags & m_ISJUMPING) && !(m_flags & m_ISFALLING) 
-		&& !(m_flags & m_ISPUSHTOSPACE) && CheckHitKey(KEY_INPUT_SPACE))
+		&& !(m_flags & m_ISPUSHTOSPACE) && CheckHitKey(KEY_INPUT_SPACE) )
 	{
 		m_flags |= m_ISJUMPING; // ジャンプしてる
 		m_flags |= m_ISPUSHTOSPACE; // 一度押したら離すまで再入力されない
-		m_jumpStartY = playerInfo.y;
+		m_jumpStartY = collider.y1;
+		SetOnCollisionFalse();
 	}
 
 	if (m_flags & m_ISJUMPING) // 飛んでいたら
@@ -57,37 +52,50 @@ void Player::UpDatePlayer()
 		Jumping();
 	}
 
-	if (m_flags & m_ISFALLING) // 落ちていたら
+	if (!(m_flags & m_ISJUMPING)) // 落ちていたら
 	{
 		Falling();
 	}
-
-	DrawPlayer(); // プレイヤーの描画
 }
 
 // プレイヤーの描画
 void Player::DrawPlayer() const
 {
-	DrawGraph((int)playerInfo.x, (int)playerInfo.y, playerInfo.GraphName, playerInfo.TransFlag);
+	DrawGraph((int)collider.x1, (int)collider.y1, playerInfo.GraphName, playerInfo.TransFlag);
 }
 
 // ジャンプのしてる判定
 void Player::Jumping()
 {
-	playerInfo.y -= m_JUMPSPEED;
-	if (playerInfo.y <= m_jumpStartY - m_HUMPHEIGHTMAX || !CheckHitKey(KEY_INPUT_SPACE))
+	collider.y1 -= m_JUMPSPEED, collider.y2 -= m_JUMPSPEED; // プレイヤーのｙ軸の変更
+	if (collider.y1 <= m_jumpStartY - m_HUMPHEIGHTMAX || !CheckHitKey(KEY_INPUT_SPACE))
 	{
 		m_flags &= ~m_ISJUMPING; // ジャンプしていない
-		m_flags |= m_ISFALLING; // 空中
+		m_flags |= m_ISFALLING; // 落ちている
+	}
+	else if (m_onCollision)
+	{
+		OnCollision();
+		m_flags &= ~m_ISJUMPING; // ジャンプをしていない
+		m_flags &= ~m_ISFALLING; // 空中でもない
 	}
 }
 
 // 落ちてる判定
 void Player::Falling()
 {
-	playerInfo.y += m_GRAVITY;
-	if (playerInfo.y >= 300) // ここに当たり判定系の処理を入れる（落ちる高さ）
+	if (m_onCollision && !(m_flags & m_ISJUMPING)) // ここに当たり判定系の処理を入れる（落ちる高さ）
 	{
+		OnCollision();
 		m_flags &= ~m_ISFALLING; // 何かしらの上
 	}
+	else
+	{
+		collider.y1 += m_GRAVITY, collider.y2 += m_GRAVITY; // プレイヤーのｙ軸の変更
+	}
+}
+
+void Player::OnCollision()
+{
+	collider.y1 += m_BLOCKDOUWSPEED, collider.y2 += m_BLOCKDOUWSPEED; // ブロックと同じ速度
 }

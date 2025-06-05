@@ -1,4 +1,6 @@
 #include "UnderSpike.h"
+#include "GameInfo.h"
+#include "DxLib.h"
 
 // 基本は三角形描画の関数の引数をもとにしている xy1は左辺　xy2は右辺　xy3は上辺の位置を入れるかつ基本は右に増やすので左端の座標とする
 // 最後の変数のみスクリーンのｘを入れる
