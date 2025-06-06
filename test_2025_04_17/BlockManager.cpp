@@ -76,7 +76,11 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 	BlockInfo lateralBlock = { 0, 0 };
 	int vx = -1 + 2 * GetRand(1); // -1,1の値をランダムで決める
 
-	m_verticalRange = GetRand(player->GetColliderInfo().y2 -170) + 150 ; // 縦の位置をランダムで設定
+	int playerY = player->GetColliderInfo().y1;
+	int minY = playerY - 100,
+		   maxY = playerY;
+
+	m_verticalRange = GetRand(maxY - minY) + minY; // 縦の位置をランダムで設定
 
 	m_blockColor = GetColor(GetRand(255), GetRand(255), GetRand(255)); // 色をランダムで設定
 
@@ -99,14 +103,13 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 }
 
 // ブロックのリストを使って回したいのでプレイヤークラスを持たせるようにする
- void BlockManager::CheckHitCollider(Block* block, BoxCollider* player)
+ void BlockManager::CheckHitCollider(Block* block, Player* player)
 {
 		ColliderInfo p = player->GetColliderInfo();
 		ColliderInfo b = block->GetColliderInfo();
 
 #ifdef _DEBUG
-		DrawFormatString(0, 45, GetColor(255, 255, 255), "当たり判定P.y2:%lf ", p.y2);
-		DrawFormatString(0, 60, GetColor(255, 255, 255), "当たり判定B.y1:%lf ", b.y1);
+		DrawFormatString(0, 45, GetColor(255, 255, 255), "P.y1:%lf P.y2:%lf ", p.y1, p.y2);
 #endif // _DEBUG
 
 		//それぞれの中心点からの距離を求める
@@ -119,19 +122,22 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 
 		if (dx < abHW && dy < abHH)
 		{
- 			if (p.y2 <= b.y1 + (b.y2 - b.y1) * 0.15)
+			if (p.y2 <= b.y1 + (b.y2 - b.y1) * 0.5)
 			{
 				player->SetOnCollisionTrue();
 				block->SetOnCollisionTrue(); // ブロックの当たり判定を変更（ブロック関係がfalseに戻ることは今のところない）
-			}
+				
+				player->SetPosY(b.y1);  // ～～～6/6ここから～～～
+
 #ifdef _DEBUG
-			DrawFormatString(0, 75, GetColor(255, 255, 255), "当たり");
+					DrawFormatString(0, 75, GetColor(255, 255, 255), "当たり");
 #endif // _DEBUG
+			}
 		}
 }
 
  // 上の関数をmain関数で回すやつ
- void BlockManager::CheckHitColliderAll(BoxCollider* player)
+ void BlockManager::CheckHitColliderAll(Player* player)
  {
 	 for (Block* block : blockList)
 	 {

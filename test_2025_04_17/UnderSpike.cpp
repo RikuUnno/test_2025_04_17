@@ -5,16 +5,16 @@
 // 基本は三角形描画の関数の引数をもとにしている xy1は左辺　xy2は右辺　xy3は上辺の位置を入れるかつ基本は右に増やすので左端の座標とする
 // 最後の変数のみスクリーンのｘを入れる
 UnderSpike::UnderSpike(unsigned int color, int fillFlag, int sx)
-{
-	int x1 = 0;						// 0地点
-	int y1 = WIN_SIZE_Y;			// 
-	int x2 = WIN_SIZE_X / 12;		// 
-	int y2 = WIN_SIZE_Y;			// 
-	int x3 = x2 / 2;				// 
-	int y3 = WIN_SIZE_Y / 15 * 14;	//  
-	spikeinfo = { x1, y1, x2, y2, x3, y3, color, fillFlag, sx };
+{ 
+	spikeinfo = { 0, 
+		WIN_SIZE_Y, 
+		WIN_SIZE_X / 12, 
+		WIN_SIZE_Y, 
+		(WIN_SIZE_X / 12) / 2, 
+		WIN_SIZE_Y / 15 * 14, 
+		color, fillFlag, sx };
 
-	m_offset = x2;
+	m_offset = WIN_SIZE_X / 12;
 	m_triangleX = 0;
 }
 

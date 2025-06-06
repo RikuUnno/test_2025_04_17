@@ -42,7 +42,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	ColliderInfo blockXY = {0,0,0,0}; // 生成用
 	BlockInfo block = {0,0}; // 生成用
 
-	Player player(PlayerInfo({ WIN_SIZE_X / 2, WIN_SIZE_Y / 4 * -3, playerGraph, TRUE}));
+	Player player(PlayerInfo({ WIN_SIZE_X / 2, WIN_SIZE_Y / 20, playerGraph, FALSE}));
 
 	BlockManager bm;
 	
@@ -60,10 +60,9 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		
 		bm.UpDateBlocks(&player); // ブロックの内部処理
 
-		bm.CheckHitColliderAll(&player); // 当たり判定
-
 		player.UpDatePlayer(); // プレイヤーの内部処理
 
+		bm.CheckHitColliderAll(&player); // 当たり判定
 
 		// ～～～描画～～～　処理の手順と描画で入れ違うことがあったので分離
 

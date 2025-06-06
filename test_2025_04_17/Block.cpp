@@ -9,7 +9,7 @@ Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument)
 	blockInfo = blockArgument;
 
 	m_downSpeed = 0.7; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž0.7f
-	m_lateralSpeed = 2; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž0.7f
+	m_lateralSpeed = 3.5; // ‚Ç‚Ì‚­‚ç‚¢‚É‚È‚é‚©‚í‚©‚ç‚È‚¢‚Ì‚Åˆê‰ž3.5f
 
 	m_fillFlag = FALSE;
 }
