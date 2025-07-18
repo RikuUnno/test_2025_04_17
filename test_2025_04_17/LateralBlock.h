@@ -19,7 +19,5 @@ private:
 	// ¶‰EˆÚ“®
 	void MoveBlockLateral() override;
 
-	// •`‰æXV
-	void UpdateBlock() override;
 };
 

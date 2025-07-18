@@ -5,11 +5,18 @@
 
 using namespace std;
 
-BlockManager::BlockManager()
+BlockManager::BlockManager(Player* player, unsigned int triangleCr)
 {
 	m_createTimer = 0; // 生成タイマー
 	m_verticalRange = 0; // 生成される縦の範囲
 	m_blockColor = 0; // 生成するブロックの色を格納
+	boxColliderList.push_back(player); // 最初の一回だけ追加
+
+	//～～～～～～～～
+
+	ColliderInfo blockXY = { 0,0,0,0 }; // 生成用
+	BlockInfo block = { 0,0 }; // 生成用
+	AddBlocks(new Block(blockXY = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, block = { triangleCr, TRUE }));
 }
 
 BlockManager::~BlockManager()
@@ -76,16 +83,13 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 	BlockInfo lateralBlock = { 0, 0 };
 	int vx = -1 + 2 * GetRand(1); // -1,1の値をランダムで決める
 
-	int playerY = player->GetColliderInfo().y1;
+	int playerY = (int)player->GetColliderInfo().y1;
 	int minY = playerY - 100,
 		   maxY = playerY;
 
 	m_verticalRange = GetRand(maxY - minY) + minY; // 縦の位置をランダムで設定
 
 	m_blockColor = GetColor(GetRand(255), GetRand(255), GetRand(255)); // 色をランダムで設定
-
-	// ColliderInfo lateralBlockXY = { -100, m_verticalRange , 0, m_verticalRange + 50};
-	// BlockInfo lateralBlock = {m_blockColor, FALSE};
 
 	if (vx < 0)
 	{
@@ -98,42 +102,69 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 		lateralBlock = {m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 	}
 
-	AddBlocks(new LateralBlock(lateralBlockXY, lateralBlock, vx)); // ブロックの生成
+	AddBlocks(new Block(lateralBlockXY, lateralBlock, vx)); // ブロックの生成
 
 }
 
 // ブロックのリストを使って回したいのでプレイヤークラスを持たせるようにする
- void BlockManager::CheckHitCollider(Block* block, Player* player)
+void BlockManager::CheckHitCollider(Block* block, Player* player)
 {
-		ColliderInfo p = player->GetColliderInfo();
-		ColliderInfo b = block->GetColliderInfo();
+	ColliderInfo p = player->GetColliderInfo();
+	ColliderInfo b = block->GetColliderInfo();
+
+	boxColliderList.push_back(block);
+
+	// 仮想の当たり判定をブロックの1個分上に置く
+	ColliderInfo virtualBlock;
+	double height = b.y2 - b.y1;
+
+	virtualBlock.x1 = b.x1 + 10;
+	virtualBlock.x2 = b.x2 - 10;
+	virtualBlock.y1 = b.y1 - height + 10;  // 1個分上に
+	virtualBlock.y2 = b.y1;           // ブロックの上辺まで
+
+	// 中心点からの距離
+	double dx = std::fabs(((p.x1 + p.x2) / 2.0) - ((virtualBlock.x1 + virtualBlock.x2) / 2.0));
+	double dy = std::fabs(((p.y1 + p.y2) / 2.0) - ((virtualBlock.y1 + virtualBlock.y2) / 2.0));
+
+	// 判定サイズ
+	double abHW = (((p.x2 - p.x1) / 2.0) + (virtualBlock.x2 - virtualBlock.x1) / 2);
+	double abHH = (((p.y2 - p.y1) / 2.0) + (virtualBlock.y2 - virtualBlock.y1) / 2);
 
 #ifdef _DEBUG
-		DrawFormatString(0, 45, GetColor(255, 255, 255), "P.y1:%lf P.y2:%lf ", p.y1, p.y2);
-#endif // _DEBUG
+	// プレイヤーの当たり判定：緑
+	DrawBox(
+		(int)(p.x1),
+		(int)(p.y1),
+		(int)(p.x2),
+		(int)(p.y2),
+		GetColor(0, 255, 0),
+		FALSE  // 塗りつぶし false = 枠線のみ
+	);
 
-		//それぞれの中心点からの距離を求める
-		double dx = std::fabs(((p.x1 + p.x2) / 2.0) - ((b.x1 + b.x2) / 2.0));
-		double dy = std::fabs(((p.y1 + p.y2) / 2.0) - ((b.y1 + b.y2) / 2.0));
+	// 仮想の乗れる判定：赤
+	DrawBox(
+		(int)(virtualBlock.x1),
+		(int)(virtualBlock.y1),
+		(int)(virtualBlock.x2),
+		(int)(virtualBlock.y2),
+		GetColor(255, 0, 0),
+		FALSE
+	);
 
-		// それぞれの半分を足した長さを求める
-		double abHW = (((p.x2 - p.x1) / 2.0) + (b.x2 - b.x1) / 2);
-		double abHH = (((p.y2 - p.y1) / 2.0) + (b.y2 - b.y1) / 2);
+	DrawLine((int)b.x1 - 30, (int)b.y1, (int)b.x2 + 30, (int)b.y1, GetColor(255, 142, 241));
+#endif
 
-		if (dx < abHW && dy < abHH)
-		{
-			if (p.y2 <= b.y1 + (b.y2 - b.y1) * 0.5)
-			{
-				player->SetOnCollisionTrue();
-				block->SetOnCollisionTrue(); // ブロックの当たり判定を変更（ブロック関係がfalseに戻ることは今のところない）
-				
-				player->SetPosY(b.y1);  // ～～～6/6ここから～～～
+	if (dx < abHW && dy < abHH)
+	{
+		block->AddCurrentHitCollider(player);
+		player->AddCurrentHitCollider(block);
 
 #ifdef _DEBUG
-					DrawFormatString(0, 75, GetColor(255, 255, 255), "当たり");
-#endif // _DEBUG
-			}
-		}
+		DrawFormatString(0, 75, GetColor(255, 255, 255), "当たり");
+#endif //_DEBUG
+
+	}
 }
 
  // 上の関数をmain関数で回すやつ
@@ -144,6 +175,20 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 		 if(block != nullptr) CheckHitCollider(block, player);
 	 }
 
+	 for (BoxCollider* block : boxColliderList)
+	 {
+		 block->CheckCollisionEvent();
+	 }
+
+	 // プレイヤー以外のブロックをlistから削除
+	boxColliderList.erase(
+		 std::remove_if(boxColliderList.begin(), boxColliderList.end(),
+			 [](BoxCollider* collider) {
+				 // Player* にキャストできなければ削除対象
+				 return dynamic_cast<Player*>(collider) == nullptr;
+			 }),
+		boxColliderList.end()
+	 );
  }
 
  // 描画処理

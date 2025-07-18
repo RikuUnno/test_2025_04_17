@@ -27,7 +27,8 @@ Player::Player(PlayerInfo playerArgument)
 	m_fallVelocity = 0.0; // 加速率
 
 	m_blockHeight = 0.0; // ブロックのheight
-	m_space = 0.0; // ブロックとプレイヤーの間の差
+	m_space = collider.y2 - collider.y1; // プレイヤーy1とy2の間の差
+	blockHeight = 0;
 }
 
 // デストラクタ
@@ -46,14 +47,15 @@ void Player::UpDatePlayer()
 	}
 
 	// スペースを押したらジャンプ
-	if (!(m_flags & m_ISJUMPING) && !(m_flags & m_ISFALLING) 
-		&& !(m_flags & m_ISPUSHTOSPACE) && CheckHitKey(KEY_INPUT_SPACE) )
+	if (!(m_flags & m_ISJUMPING) && !(m_flags & m_ISFALLING) &&
+		!(m_flags & m_ISPUSHTOSPACE) && CheckHitKey(KEY_INPUT_SPACE) )
 	{
 		m_flags |= m_ISJUMPING; // ジャンプしてる
 		m_flags |= m_ISPUSHTOSPACE; // 一度押したら離すまで再入力されない
+		SetOnCollisionFalse(); // 当たり判定の解除
 		m_jumpStartY = collider.y1;
 		m_jumpVelocity = m_JUMP_INIT_SPEED; // 初速セット
-		SetOnCollisionFalse();
+		
 	}
 
 	if (m_flags & m_ISJUMPING) // 飛んでいたら
@@ -71,8 +73,6 @@ void Player::UpDatePlayer()
 	{
 		m_flags &= ~m_ISJUMPING; // ジャンプをしていない
 		m_flags &= ~m_ISFALLING; // 空中でもない
-		
-		OnCollision();
 	}
 }
 
@@ -80,6 +80,13 @@ void Player::UpDatePlayer()
 void Player::DrawPlayer() const
 {
 	DrawGraph((int)collider.x1, (int)collider.y1, playerInfo.GraphName, playerInfo.TransFlag);
+}
+
+void Player::CollisionEnter(BoxCollider* other)
+{
+	SetOnCollisionTrue(); // ブロックと同じ速度
+	blockHeight = other->GetColliderInfo().y1;
+
 }
 
 // ジャンプのしてる判定
@@ -99,19 +106,23 @@ void Player::Jumping()
 		m_flags |= m_ISFALLING; // 落ちている
 		m_fallVelocity = 0.0;
 	}
+	if (m_onCollision) if (collider.y2 > blockHeight)SetPosY();
 }
 
 // 落ちてる判定
 void Player::Falling()
-{
+{ 
 #ifdef _DEBUG
 	DrawFormatString(0, 105, GetColor(255, 255, 255), "Falling");
 #endif // _DEBUG
 
-	if (m_onCollision && !(m_flags & m_ISJUMPING)) // ここに当たり判定系の処理を入れる（落ちる高さ）
+	if (m_onCollision) // ここに当たり判定系の処理を入れる（落ちる高さ）
 	{
 		m_flags &= ~m_ISFALLING; // 何かしらの上
-		m_fallVelocity = 0.0; // 落下停止（なにがしの上）
+		m_fallVelocity = 0.0; // 落下停止（なにがしの上
+		collider.y1 += m_BLOCKDOUWSPEED,
+		collider.y2 += m_BLOCKDOUWSPEED; // プレイヤーのｙ軸の変更
+		if (collider.y2 < blockHeight)SetPosY();
 	}
 	else
 	{
@@ -123,18 +134,9 @@ void Player::Falling()
 	}
 }
 
-// 当たり判定の処理
-void Player::OnCollision()
+void Player::SetPosY()
 {
-	collider.y1 += m_BLOCKDOUWSPEED, collider.y2 += m_BLOCKDOUWSPEED; // ブロックと同じ速度
-}
-
-void Player::SetPosY(double blockHeight)
-{
-	m_blockHeight = blockHeight;
-	m_space = blockHeight - collider.y2; // ブロックの上辺とプレイヤーの下辺のスペースを取る
-
-	collider.y1 += m_space;
-	collider.y2 = blockHeight;
+	collider.y2 = blockHeight;	
+	collider.y1 = collider.y2 - m_space;
 }
 

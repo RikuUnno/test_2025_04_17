@@ -36,6 +36,8 @@ private:
 	const double m_FALL_GRAVITY = 0.2; // 降下中の加速
 	const double m_FALL_SUPEED_MAX = 50.0; // 加速速度の上限
 
+	double blockHeight; // 当たったブロックの高さ（画面座標）
+
 private:
 
 	// ジャンプのしてる判定
@@ -44,8 +46,7 @@ private:
 	// 落ちている判定
 	void Falling();
 
-	// 当たっているときの処理（使わなくてもいい
-	void OnCollision(); 
+	void CollisionEnter(BoxCollider* other) override;
 
 public:
 	// コンストラクタ
@@ -60,6 +61,6 @@ public:
 	// プレイヤーの描画
 	void DrawPlayer() const;
 
-	void SetPosY(double blockHeight);
+	void SetPosY();
 
 };

@@ -1,11 +1,25 @@
 #include "Block.h"
 #include "DxLib.h"
 #include "GameInfo.h"
+#include "BlockManager.h"
 
 	// コンストラクタ
 Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument)
 	: BoxCollider({ blockArgumentXY})
 {
+	blockInfo = blockArgument;
+
+	m_downSpeed = 0.7; // どのくらいになるかわからないので一応0.7f
+	m_lateralSpeed = 3.5; // どのくらいになるかわからないので一応3.5f
+
+	m_fillFlag = FALSE;
+}
+
+Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument, int directionOfMovement)
+	: BoxCollider({ blockArgumentXY })
+{
+	m_directionOfMove = directionOfMovement;
+
 	blockInfo = blockArgument;
 
 	m_downSpeed = 0.7; // どのくらいになるかわからないので一応0.7f
@@ -28,16 +42,30 @@ void Block::MoveBlockDown()
 }
 
 // ブロックの横移動
-void Block::MoveBlockLateral()
+void LateralBlock::MoveBlockLateral()
 {
-	// 最初のブロックも動いてしまうのでここには書かない
-	// memo FirstBlockClassに実装を書かないといけなくなるのでとりあえず仮想関数（別の動きをするブロックを作るときは変えたほうがいいかも）
+	// コンストラクタに動く方向を持たせてそれを判定にしている
+	collider.x1 += m_directionOfMove * m_lateralSpeed;
+	collider.x2 += m_directionOfMove * m_lateralSpeed;
 }
 
 // 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
 void Block::DrawBlock() const
 {
 	DrawBox((int)collider.x1, (int)collider.y1, (int)collider.x2, (int)collider.y2, blockInfo.color, blockInfo.fillFlag);
+}
+
+void Block::UpdateBlock()
+{
+	if (!m_onCollision)
+	{
+		MoveBlockLateral(); // 横移動
+	}
+	else
+	{
+		MoveBlockDown(); // 下移動
+		SetFillBlock(); // ブロックの塗りつぶし
+	}
 }
 
 // 画面外かの判定
@@ -52,4 +80,10 @@ bool Block::IsOffScreen() const
 void Block::SetFillBlock()
 {
 	blockInfo.fillFlag = TRUE;
+}
+
+
+void Block::CollisionEnter(BoxCollider* other)
+{
+	SetOnCollisionTrue();
 }

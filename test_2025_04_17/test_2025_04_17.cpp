@@ -26,7 +26,7 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	}
 
 	SRand((unsigned int)time(NULL));
-	
+
 	int sx, sy, sc; // 現在のスクリーンのx,y,colorを入れる変数
 	const unsigned int triangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
 
@@ -39,17 +39,12 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	UnderSpike spike(triangleCr, TRUE, sx);
 
-	ColliderInfo blockXY = {0,0,0,0}; // 生成用
-	BlockInfo block = {0,0}; // 生成用
+	Player player(PlayerInfo({ WIN_SIZE_X / 2, WIN_SIZE_Y / 20, playerGraph, TRUE}));
 
-	Player player(PlayerInfo({ WIN_SIZE_X / 2, WIN_SIZE_Y / 20, playerGraph, FALSE}));
-
-	BlockManager bm;
-	
-	bm.AddBlocks(new FirstBlock(blockXY = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, block = {triangleCr, TRUE}));
+	BlockManager bm(&player, triangleCr);
 
 	// 描画先画面を裏画面にセット
-	SetDrawScreen(DX_SCREEN_BACK);
+	SetDrawScreen(DX_SCREEN_FRONT);
 
 	// ESCを押したら画面が落ちる
 	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
@@ -57,12 +52,11 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		clsDx();
 		ClearDrawScreen();
 
-		
+		bm.CheckHitColliderAll(&player); // 当たり判定
+
 		bm.UpDateBlocks(&player); // ブロックの内部処理
 
 		player.UpDatePlayer(); // プレイヤーの内部処理
-
-		bm.CheckHitColliderAll(&player); // 当たり判定
 
 		// ～～～描画～～～　処理の手順と描画で入れ違うことがあったので分離
 
@@ -71,10 +65,14 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 		bm.DrawBlocks(); // ブロックの描画
 
 		player.DrawPlayer(); // プレイヤーの描画
+		
+		DrawFormatString(0, 150, GetColor(255, 255, 255), "Jumping: %s", player.GetOnCollision() ? "True" : "False");
 
 		ScreenFlip();
 	}
 
 	DxLib_End(); // DXライブラリ使用の終了処理
+
+	return 0;
 }
 

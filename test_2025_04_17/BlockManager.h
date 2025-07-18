@@ -3,19 +3,21 @@
 #include "Block.h"
 #include "Player.h"
 #include "LateralBlock.h"
+#include "BoxCollider.h"
 #include <vector>
 
 class BlockManager
 {
 private:
 	std::vector<Block*> blockList; // ブロックの管理用list
+	std::vector<BoxCollider*> boxColliderList; // 当たったコライダーのイベントチェック用
 	int m_createTimer; // 生成タイマー
 	const int m_CREATEINTERAVL = 120; // 例: 120フレームごと
 	double	m_verticalRange; // 生成される縦の範囲
 	unsigned int m_blockColor; // 生成するブロックの色を格納
-
+	 
 public:
-	BlockManager();
+	BlockManager(Player* player, unsigned int triangleCr);
 
 	virtual ~BlockManager();
 

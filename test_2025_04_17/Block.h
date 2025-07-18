@@ -3,7 +3,6 @@
 
 struct BlockInfo
 {
-	// double x1, y1, x2, y2; // ブロックの位置情報
 	unsigned int color; // ブロックの色
 	int fillFlag; // 埋めるかどうか
 };
@@ -16,10 +15,13 @@ protected:
 	double m_downSpeed; // 落ちる速さ
 	double m_lateralSpeed; // 横移動の速さ
 	int m_fillFlag; // ブロックの塗りつぶし
+	int m_directionOfMove; // 出てくる方向
 
 public:
 	// コンストラクタ
 	Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument);
+
+	Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument, int directionOfMovement);
 
 	//デストラクタ
 	virtual ~Block();
@@ -37,14 +39,18 @@ protected:
 
 public:
 	// 描画のみを扱う (引数に関しては "DrawBox"　の物を参照)
-	virtual void DrawBlock() const;
+	void DrawBlock() const;
 
 	// ブロックの内部処理（位置の変更等）
-	virtual void UpdateBlock() = 0;
+	void UpdateBlock();
 
 	// 画面外かの判定
 	bool IsOffScreen() const;
 
 	// ブロックの色埋め
 	void SetFillBlock();
+
+private:
+	void CollisionEnter(BoxCollider* other) override; // 当たり判定
+
 };

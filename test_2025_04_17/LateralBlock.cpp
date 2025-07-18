@@ -19,17 +19,5 @@ void LateralBlock::MoveBlockLateral()
 	
 }
 
-void LateralBlock::UpdateBlock()
-{
-	if(!m_onCollision)
-	{
-	MoveBlockLateral(); // ‰¡ˆÚ“®
-	}
-	else
-	{
-	MoveBlockDown(); // ‰ºˆÚ“®
-	SetFillBlock(); // ƒuƒƒbƒN‚Ì“h‚è‚Â‚Ô‚µ
-	}
-}
 
 
