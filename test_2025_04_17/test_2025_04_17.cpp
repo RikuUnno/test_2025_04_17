@@ -3,8 +3,6 @@
 #include "UnderSpike.h"
 #include "Block.h"
 #include "BlockManager.h"
-#include "FirstBlock.h"
-#include "LateralBlock.h"
 #include "Player.h"
 #include "BoxCollider.h"
 
@@ -42,6 +40,10 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	Player player(PlayerInfo({ WIN_SIZE_X / 2, WIN_SIZE_Y / 20, playerGraph, TRUE}));
 
 	BlockManager bm(&player, triangleCr);
+
+	ColliderInfo blockXY = { 0,0,0,0 }; // 生成用
+	BlockInfo block = { 0,0 }; // 生成用
+	bm.AddBlocks(new Block(blockXY = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, block = { triangleCr, TRUE }));
 
 	// 描画先画面を裏画面にセット
 	SetDrawScreen(DX_SCREEN_FRONT);

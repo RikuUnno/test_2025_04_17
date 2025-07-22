@@ -33,9 +33,7 @@ Player::Player(PlayerInfo playerArgument)
 
 // デストラクタ
 Player::~Player()
-{
-
-}
+{}
 
 //プレイヤー関係の更新用
 void Player::UpDatePlayer()
@@ -73,6 +71,10 @@ void Player::UpDatePlayer()
 	{
 		m_flags &= ~m_ISJUMPING; // ジャンプをしていない
 		m_flags &= ~m_ISFALLING; // 空中でもない
+		m_flags &= ~m_ISFALLING; // 何かしらの上
+		m_fallVelocity = 0.0; // 落下停止（なにがしの上
+		collider.y1 += m_BLOCKDOUWSPEED,
+		collider.y2 += m_BLOCKDOUWSPEED; // プレイヤーのｙ軸の変更
 	}
 }
 
@@ -84,9 +86,10 @@ void Player::DrawPlayer() const
 
 void Player::CollisionEnter(BoxCollider* other)
 {
-	SetOnCollisionTrue(); // ブロックと同じ速度
-	blockHeight = other->GetColliderInfo().y1;
 
+	blockHeight = other->GetColliderInfo().y1;
+	SetPosY();
+	SetOnCollisionTrue(); // ブロックと同じ速度
 }
 
 // ジャンプのしてる判定
@@ -106,7 +109,6 @@ void Player::Jumping()
 		m_flags |= m_ISFALLING; // 落ちている
 		m_fallVelocity = 0.0;
 	}
-	if (m_onCollision) if (collider.y2 > blockHeight)SetPosY();
 }
 
 // 落ちてる判定
@@ -117,13 +119,7 @@ void Player::Falling()
 #endif // _DEBUG
 
 	if (m_onCollision) // ここに当たり判定系の処理を入れる（落ちる高さ）
-	{
-		m_flags &= ~m_ISFALLING; // 何かしらの上
-		m_fallVelocity = 0.0; // 落下停止（なにがしの上
-		collider.y1 += m_BLOCKDOUWSPEED,
-		collider.y2 += m_BLOCKDOUWSPEED; // プレイヤーのｙ軸の変更
-		if (collider.y2 < blockHeight)SetPosY();
-	}
+	{}
 	else
 	{
 		m_fallVelocity += m_FALL_GRAVITY;

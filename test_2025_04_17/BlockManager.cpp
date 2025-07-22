@@ -1,5 +1,6 @@
 #include "BlockManager.h"
 #include "DxLib.h"
+#include "GameInfo.h"
 #include <string>
 #include <cmath>
 
@@ -11,12 +12,6 @@ BlockManager::BlockManager(Player* player, unsigned int triangleCr)
 	m_verticalRange = 0; // 生成される縦の範囲
 	m_blockColor = 0; // 生成するブロックの色を格納
 	boxColliderList.push_back(player); // 最初の一回だけ追加
-
-	//～～～～～～～～
-
-	ColliderInfo blockXY = { 0,0,0,0 }; // 生成用
-	BlockInfo block = { 0,0 }; // 生成用
-	AddBlocks(new Block(blockXY = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, block = { triangleCr, TRUE }));
 }
 
 BlockManager::~BlockManager()
@@ -120,8 +115,14 @@ void BlockManager::CheckHitCollider(Block* block, Player* player)
 
 	virtualBlock.x1 = b.x1 + 10;
 	virtualBlock.x2 = b.x2 - 10;
-	virtualBlock.y1 = b.y1 - height + 10;  // 1個分上に
+	virtualBlock.y1 = b.y1 - height + 15;  // 1個分上に
 	virtualBlock.y2 = b.y1;           // ブロックの上辺まで
+
+	// 「プレイヤーの当たり判定の上端（y1）」を下に下げる（頭を当たり判定から外す）
+	float playerHeight = p.y2 - p.y1;
+	float reduceHead = playerHeight * 0.5f;  // 上半分を無効化（＝真ん中から下だけ当たり判定）
+
+	p.y1 += reduceHead;
 
 	// 中心点からの距離
 	double dx = std::fabs(((p.x1 + p.x2) / 2.0) - ((virtualBlock.x1 + virtualBlock.x2) / 2.0));

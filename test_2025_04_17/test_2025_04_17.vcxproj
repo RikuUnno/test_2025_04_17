@@ -147,8 +147,6 @@
     <ClCompile Include="BlockManager.cpp" />
     <ClCompile Include="BoxCollider.cpp" />
     <ClCompile Include="DebugManager.cpp" />
-    <ClCompile Include="FirstBlock.cpp" />
-    <ClCompile Include="LateralBlock.cpp" />
     <ClCompile Include="Player.cpp" />
     <ClCompile Include="test_2025_04_17.cpp" />
     <ClCompile Include="UnderSpike.cpp" />
@@ -165,9 +163,7 @@
     <ClInclude Include="BlockManager.h" />
     <ClInclude Include="BoxCollider.h" />
     <ClInclude Include="DebugManager.h" />
-    <ClInclude Include="FirstBlock.h" />
     <ClInclude Include="GameInfo.h" />
-    <ClInclude Include="LateralBlock.h" />
     <ClInclude Include="Player.h" />
     <ClInclude Include="UnderSpike.h" />
   </ItemGroup>

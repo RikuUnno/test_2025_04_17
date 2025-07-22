@@ -7,6 +7,8 @@
 Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument)
 	: BoxCollider({ blockArgumentXY})
 {
+	m_directionOfMove = 0;
+
 	blockInfo = blockArgument;
 
 	m_downSpeed = 0.7; // どのくらいになるかわからないので一応0.7f
@@ -42,7 +44,7 @@ void Block::MoveBlockDown()
 }
 
 // ブロックの横移動
-void LateralBlock::MoveBlockLateral()
+void Block::MoveBlockLateral()
 {
 	// コンストラクタに動く方向を持たせてそれを判定にしている
 	collider.x1 += m_directionOfMove * m_lateralSpeed;

@@ -2,7 +2,6 @@
 #include "DxLib.h"
 #include "Block.h"
 #include "Player.h"
-#include "LateralBlock.h"
 #include "BoxCollider.h"
 #include <vector>
 
