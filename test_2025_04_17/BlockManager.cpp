@@ -9,9 +9,12 @@ using namespace std;
 BlockManager::BlockManager(Player* player, unsigned int triangleCr)
 {
 	m_createTimer = 0; // 生成タイマー
-	m_verticalRange = 0; // 生成される縦の範囲
+	m_CreateInteravl = 120; // 生成インターバル
+	m_verticalPos = 0; // 生成される縦の範囲
 	m_blockColor = 0; // 生成するブロックの色を格納
 	boxColliderList.push_back(player); // 最初の一回だけ追加
+	m_heightRange = 50;
+	m_widthRange = 150;
 }
 
 BlockManager::~BlockManager()
@@ -40,7 +43,7 @@ void BlockManager::UpDateBlocks(BoxCollider* player)
 	DrawString(0, 0, timerStr.c_str(), GetColor(255, 255, 255));
 #endif // _DEBUG
 
-	if (m_createTimer >= m_CREATEINTERAVL) // 120フレームごとに生成
+	if (m_createTimer >= m_CreateInteravl) // 120フレームごとに生成
 	{
 		UpDateBlockLateral(player);
 		m_createTimer = 0;
@@ -82,18 +85,18 @@ void BlockManager::UpDateBlockLateral(BoxCollider* player)
 	int minY = playerY - 100,
 		   maxY = playerY;
 
-	m_verticalRange = GetRand(maxY - minY) + minY; // 縦の位置をランダムで設定
+	m_verticalPos = GetRand(maxY - minY) + minY; // 縦の位置をランダムで設定
 
 	m_blockColor = GetColor(GetRand(255), GetRand(255), GetRand(255)); // 色をランダムで設定
 
 	if (vx < 0)
 	{
-		lateralBlockXY = { WIN_SIZE_X, (double)m_verticalRange, WIN_SIZE_X + 125, (double)m_verticalRange + 50};
+		lateralBlockXY = { (double)WIN_SIZE_X, (double)m_verticalPos, WIN_SIZE_X + m_widthRange, (double)m_verticalPos + m_heightRange};
 		lateralBlock = {m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 	}
 	else if (vx > 0)
 	{
-		lateralBlockXY = { -125, (double)m_verticalRange, 0, (double)m_verticalRange + 50};
+		lateralBlockXY = { -m_widthRange, (double)m_verticalPos, 0, (double)m_verticalPos + m_heightRange};
 		lateralBlock = {m_blockColor, FALSE }; // 上記の情報をもとにブロック情報の生成
 	}
 
@@ -119,8 +122,8 @@ void BlockManager::CheckHitCollider(Block* block, Player* player)
 	virtualBlock.y2 = b.y1;           // ブロックの上辺まで
 
 	// 「プレイヤーの当たり判定の上端（y1）」を下に下げる（頭を当たり判定から外す）
-	float playerHeight = p.y2 - p.y1;
-	float reduceHead = playerHeight * 0.5f;  // 上半分を無効化（＝真ん中から下だけ当たり判定）
+	double playerHeight = p.y2 - p.y1;
+	double reduceHead = playerHeight * 0.5f;  // 上半分を無効化（＝真ん中から下だけ当たり判定）
 
 	p.y1 += reduceHead;
 
@@ -199,4 +202,31 @@ void BlockManager::CheckHitCollider(Block* block, Player* player)
 	 {
 		 if(block != nullptr) block->DrawBlock();
 	 }
+ }
+
+ void BlockManager::Reset(Player* player, unsigned int triangleCr)
+ {
+	 // ブロックを全て削除
+	 for (Block* block : blockList)
+	 {
+		 if (block != nullptr)
+		 {
+			 delete block;
+		 }
+	 }
+	 blockList.clear();
+
+	 // コライダーリストをプレイヤーのみに
+	 boxColliderList.clear();
+	 boxColliderList.push_back(player);
+
+	 // 各種値も初期化
+	 m_createTimer = 0;
+	 m_CreateInteravl = 120;
+	 m_verticalPos = 0;
+	 m_heightRange = 50;
+	 m_widthRange = 150;
+
+	 // 初期ブロックを1つ設置する
+	 AddBlocks(new Block({ WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, { triangleCr, TRUE }));
  }

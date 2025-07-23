@@ -5,10 +5,22 @@
 #include "BlockManager.h"
 #include "Player.h"
 #include "BoxCollider.h"
+#include "DebugManager.h"
+#include "GameManager.h"
 
 #include <time.h>
 
 using namespace std;
+
+enum class GameScene
+{
+	TITLE,
+	PLAY,
+	RESULT,
+	DEBUG
+};
+
+static GameScene currentScene = GameScene::TITLE;
 
 int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int nCmdShow)
 {
@@ -28,12 +40,12 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 	int sx, sy, sc; // 現在のスクリーンのx,y,colorを入れる変数
 	const unsigned int triangleCr = GetColor(GetRand(205) + 50, GetRand(205) + 50, GetRand(205) + 50); // 底辺のとげの色をいれる変数（ランダム）
 
+	bool isMenuOpen = false;
+	int menuSelection = 0; // 0: 続ける, 1: タイトルへ
+
 	GetScreenState(&sx, &sy, &sc);// 現在のスクリーンのx,y,colorを取得
 
-	// ～～～～～～～～　
-	// ここに画像読み込みをforで回して行う
-	int playerGraph = LoadGraph("idolFront.png");
-	// ～～～～～～～～
+	int playerGraph = LoadGraph("idolFront.png"); // プレイヤーの画像ハンドル
 
 	UnderSpike spike(triangleCr, TRUE, sx);
 
@@ -43,32 +55,99 @@ int WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR lpCmdLine, int n
 
 	ColliderInfo blockXY = { 0,0,0,0 }; // 生成用
 	BlockInfo block = { 0,0 }; // 生成用
-	bm.AddBlocks(new Block(blockXY = { WIN_SIZE_X / 3, 100, WIN_SIZE_X / 3 * 2, 150 }, block = { triangleCr, TRUE }));
+	
+	DebugManager::GetInstance().Init(&player, &bm);
 
 	// 描画先画面を裏画面にセット
 	SetDrawScreen(DX_SCREEN_FRONT);
 
 	// ESCを押したら画面が落ちる
-	while (ProcessMessage() == 0 && CheckHitKey(KEY_INPUT_ESCAPE) == 0)
+	while (ProcessMessage() == 0)
 	{
 		clsDx();
 		ClearDrawScreen();
 
-		bm.CheckHitColliderAll(&player); // 当たり判定
+		if (CheckHitKey(KEY_INPUT_H)) currentScene = GameScene::DEBUG;
 
-		bm.UpDateBlocks(&player); // ブロックの内部処理
+		switch (currentScene) {
+		case GameScene::TITLE:
+			DrawFormatString(WIN_SIZE_X / 2 - 70, WIN_SIZE_Y / 3, GetColor(255, 255, 255), "上に上ってゲー");
+			DrawFormatString(WIN_SIZE_X / 2 - 70, WIN_SIZE_Y / 3 * 2 , GetColor(255, 255, 255), "Sキーでスタート");
+			
+			if (CheckHitKey(KEY_INPUT_S)) {
+				player.Reset();
+				bm.Reset(&player, triangleCr);
+				currentScene = GameScene::PLAY;
+			}
+			break;
 
-		player.UpDatePlayer(); // プレイヤーの内部処理
+		case GameScene::PLAY:
 
-		// ～～～描画～～～　処理の手順と描画で入れ違うことがあったので分離
+			if (CheckHitKey(KEY_INPUT_M)) {
+				isMenuOpen = true;
+			}
 
-		spike.DrawSpike(); // スパイクを描画
+			if (isMenuOpen) {
+				int centerX = WIN_SIZE_X / 2;
+				int centerY = WIN_SIZE_Y / 2;
 
-		bm.DrawBlocks(); // ブロックの描画
+				DrawBox(centerX - 100, centerY - 60, centerX + 100, centerY + 60, GetColor(0, 0, 0), TRUE); // メニュー背景
+				DrawString(centerX - 30, centerY - 40, "メニュー", GetColor(255, 255, 255));
+				DrawString(centerX - 40, centerY - 10, "1キー: 続ける", GetColor(255, 255, 255));
+				DrawString(centerX - 50, centerY + 20, "2キー: タイトルへ", GetColor(255, 255, 255));
 
-		player.DrawPlayer(); // プレイヤーの描画
-		
-		DrawFormatString(0, 150, GetColor(255, 255, 255), "Jumping: %s", player.GetOnCollision() ? "True" : "False");
+				if (CheckHitKey(KEY_INPUT_1)) {
+					isMenuOpen = false;
+				}
+				if (CheckHitKey(KEY_INPUT_2)) {
+					isMenuOpen = false;
+					currentScene = GameScene::TITLE;
+				}
+
+				break; // メニューが開いてる間は下の処理は行わない
+			}
+
+			// --- 通常のゲーム進行処理 ---
+			bm.CheckHitColliderAll(&player);
+			bm.UpDateBlocks(&player);
+			player.UpDatePlayer();
+
+			bm.DrawBlocks();
+			player.DrawPlayer();
+			spike.DrawSpike();
+
+			DrawFormatString(WIN_SIZE_X / 15, WIN_SIZE_Y / 17, GetColor(255, 255, 255), "生き残れた数 %d個", GameManager::GetInstance().GetPoint());
+
+			if (player.GetColliderInfo().y2 >= spike.GetSpikeTopY()) currentScene = GameScene::RESULT;
+			break;
+
+		case GameScene::RESULT:
+			DrawFormatString(WIN_SIZE_X / 2 - 60, WIN_SIZE_Y / 3, GetColor(255, 0, 0), "GAME OVER");
+			DrawFormatString(WIN_SIZE_X / 2 - 60, WIN_SIZE_Y / 3 + 40, GetColor(255, 255, 255), "生き残れた数 %d個", GameManager::GetInstance().GetPoint());
+			DrawFormatString(WIN_SIZE_X / 2 - 80, WIN_SIZE_Y / 2, GetColor(255, 255, 255), "1キー: 再挑戦");
+			DrawFormatString(WIN_SIZE_X / 2 - 80, WIN_SIZE_Y / 2 + 30, GetColor(255, 255, 255), "2キー: タイトル");
+
+			// 再挑戦（ゲーム再スタート）
+			if (CheckHitKey(KEY_INPUT_1)) {
+				// プレイヤーとブロックの状態をリセット
+				player.Reset();
+				bm.Reset(&player, triangleCr);
+
+				currentScene = GameScene::PLAY;
+			}
+
+			// タイトルへ戻る
+			if (CheckHitKey(KEY_INPUT_2)) {
+				currentScene = GameScene::TITLE;
+			}
+		break;
+
+		case GameScene::DEBUG:
+			DebugManager::GetInstance().Update();
+			DebugManager::GetInstance().Draw();
+			if(CheckHitKey(KEY_INPUT_ESCAPE)) currentScene = GameScene::PLAY;
+			break;
+		}
 
 		ScreenFlip();
 	}

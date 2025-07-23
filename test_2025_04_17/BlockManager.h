@@ -10,10 +10,17 @@ class BlockManager
 private:
 	std::vector<Block*> blockList; // ブロックの管理用list
 	std::vector<BoxCollider*> boxColliderList; // 当たったコライダーのイベントチェック用
-	int m_createTimer; // 生成タイマー
-	const int m_CREATEINTERAVL = 120; // 例: 120フレームごと
-	double	m_verticalRange; // 生成される縦の範囲
+	double m_createTimer; // 生成タイマー
+	double m_CreateInteravl; // インターバル	
+	double m_verticalPos; // 生成される縦の位置
+	double m_heightRange;
+	double m_widthRange; // 生成される横の範囲
 	unsigned int m_blockColor; // 生成するブロックの色を格納
+
+public:
+	double& GetCreateInteravl() { return m_CreateInteravl; }
+	double& GetHeightRange() { return m_heightRange; }
+	double& GetWidthRange() { return m_widthRange; }
 	 
 public:
 	BlockManager(Player* player, unsigned int triangleCr);
@@ -34,4 +41,7 @@ private:
 	void CheckHitCollider(Block* block, Player* player); // 当たり判定(一個)
 
 	void UpDateBlockLateral(BoxCollider* player); // 基本的な横移動用の処理
+
+public:
+	void Reset(Player* player, unsigned int triangleCr); // リセット用
 };

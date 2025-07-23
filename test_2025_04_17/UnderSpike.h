@@ -22,4 +22,6 @@ public:
 	UnderSpike(unsigned int color, int fillFlag, int sx);
 
 	void DrawSpike();
-};
+
+	int GetSpikeTopY() const { return spikeinfo.y3; } // とげの先端Y座標（上方向）
+	};
