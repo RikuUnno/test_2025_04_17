@@ -25,6 +25,7 @@ void DebugManager::Update()
 	bool down = CheckHitKey(KEY_INPUT_DOWN);
 	bool left = CheckHitKey(KEY_INPUT_LEFT);
 	bool right = CheckHitKey(KEY_INPUT_RIGHT);
+	bool rshift = CheckHitKey(KEY_INPUT_RSHIFT);
 
 	// 選択項目の変更（上下キー）
 	if (up && !prevUp) {
@@ -40,10 +41,12 @@ void DebugManager::Update()
 	if (!debugItems.empty()) {
 		double& value = *debugItems[selectedIndex].valuePtr;
 		if (right && !prevRight) {
-			value += 1.0; // 増やす値
+			if (rshift && !prevRShift) value += 0.1; // 増やす値0.1
+			else value += 1.0; // 増やす値
 		}
 		if (left && !prevLeft) {
-			value -= 1.0; // 減らす値
+			if (rshift && !prevRShift) value -= 0.1; // 減らす値0.1
+			else value -= 1.0; // 減らす値
 		}
 	}
 

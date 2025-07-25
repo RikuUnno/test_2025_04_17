@@ -17,7 +17,7 @@ private:
 
 	std::vector<DebugItem> debugItems; // 変更する値のlist
 	int selectedIndex = 0; // 上のIndex
-	bool prevUp = false, prevDown = false, prevLeft = false, prevRight = false;
+	bool prevUp = false, prevDown = false, prevLeft = false, prevRight = false, prevRShift = false;
 
 private:
 	DebugManager() {} // コンストラクタ

@@ -42,11 +42,11 @@ private:
 	BoxCollider* prevColliderPtr = nullptr; // 前のコライダーのPtr
 
 public:
-	double& GetHumpHeightMax() { return m_HumpHeightMax; }
-	double& GetJumpInitSpeed() { return m_JumpInitSpeed; }
-	double& GetJumpGravity() { return m_JumpGravity; }
-	double& GetFallGravity() { return m_FallGravity; }
-	double& GetFallSupeedMax() { return m_FallSupeedMax; }
+	double* GetHumpHeightMax() { return &m_HumpHeightMax; }
+	double* GetJumpInitSpeed() { return &m_JumpInitSpeed; }
+	double* GetJumpGravity() { return &m_JumpGravity; }
+	double* GetFallGravity() { return &m_FallGravity; }
+	double* GetFallSupeedMax() { return &m_FallSupeedMax; }
 
 	ColliderInfo GetPlayerPos() const { return collider; }
 
