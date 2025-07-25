@@ -5,16 +5,16 @@
 
 	// コンストラクタ
 Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument)
-	: BoxCollider({ blockArgumentXY})
+	: Block(blockArgumentXY, blockArgument, 0)
 {
-	m_directionOfMove = 0;
+	//m_directionOfMove = 0;
 
-	blockInfo = blockArgument;
+	//blockInfo = blockArgument;
 
-	m_downSpeed = 0.7; // どのくらいになるかわからないので一応0.7f
-	m_lateralSpeed = 3.5; // どのくらいになるかわからないので一応3.5f
+	//m_downSpeed = 0.7; // どのくらいになるかわからないので一応0.7f
+	//m_lateralSpeed = 3.5; // どのくらいになるかわからないので一応3.5f
 
-	m_fillFlag = FALSE;
+	//m_fillFlag = FALSE;
 }
 
 Block::Block(ColliderInfo blockArgumentXY, BlockInfo blockArgument, int directionOfMovement)
